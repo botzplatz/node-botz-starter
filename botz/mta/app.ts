@@ -31,11 +31,16 @@ const fetchFeed = async ({ apiKey, apiEndpoint }: { apiKey: string, apiEndpoint:
 
 
 export const genBotzApp = ({
-  name = "", apiEndpoint, apiKey,
-  genJsonResponseFromApiData = (data) => data
+  name = "",
+  apiEndpoint,
+  apiKey,
+  apiInputs,
+  genJsonResponseFromApiData = (data) => () => data
 }: AppConfig) => {
   const app = express()
-  app.get("/", (req, res) => {
+  app.use(express.json())
+  app.use(express.urlencoded())
+  app.post("/", (req, res) => {
     if (!apiKey) {
       return res.json({
         error: "API_KEY_MISSING",
@@ -46,9 +51,16 @@ export const genBotzApp = ({
         error: "API_ENDPOINT_MISSING",
       })
     }
+    const inputs = apiInputs?.reduce((acc, inputName) => ({
+      ...acc,
+      [inputName]: req.body[inputName]
+    }), {})
+
+    console.log("INPUTS", JSON.stringify(inputs, null, 2))
+
     fetchFeed({ apiKey, apiEndpoint }).then((feed) => {
       return res.json({
-        data: genJsonResponseFromApiData(feed),
+        data: genJsonResponseFromApiData(feed)(inputs),
         error: null
       })
     }).catch(() => {

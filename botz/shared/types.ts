@@ -13,6 +13,7 @@ export interface AppConfig {
   apiKey?: string
   genJsonResponseFromApiData?: (data: any) => any
   apiEndpoint?: string
+  apiInputs?: string[]
   corsEnabled?: boolean
 }
 
