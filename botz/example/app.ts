@@ -1,17 +1,11 @@
 import express from "express"
 
-export interface AppConfig {
-  name: string
-}
-export interface BotzApp {
-  name: string
-  corsEnabled: boolean
-}
+import { AppConfig } from "../shared/types"
 
-export const genBotzApp = ({ name = "" }: { name: string }) => {
+export const genBotzApp = ({ name = "" }: AppConfig) => {
   const app = express()
   app.get("/", (req, res) => {
-    res.send("Express + TypeScript Server 124")
+    res.send(name)
   })
   const start = (port: number) => {
     app.listen(port, () => {
