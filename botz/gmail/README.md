@@ -1,5 +1,9 @@
 # Gmail BotzApp
 
+## Demo
+
+<https://youtu.be/RuXD0yZ6LvE>
+
 ## Obtain OAuth2 Credentials
 
 You need to put `oauth2.keys.json` in this directory.
