@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node botz/example/index.ts",
-    "dev": "ts-node-dev botz/mta/index.ts",
+    "dev": "ts-node-dev botz/gmail/index.ts",
     "build": "tsc -p .",
     "build:watch": "tsc -w -p .",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -14,7 +14,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/local-auth": "^2.1.1",
     "express": "^4.18.2",
+    "googleapis": "^120.0.0",
     "gtfs-realtime-bindings": "^1.1.1",
     "node-fetch": "2",
     "ts-dotenv": "^0.9.1"

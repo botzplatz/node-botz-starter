@@ -20,7 +20,6 @@ const getDepartureTime = (data: unknown[]) => (inputs: Record<string, string>) =
   return answer
 }
 
-
 // The response of this API call is
 /*
 Success case
