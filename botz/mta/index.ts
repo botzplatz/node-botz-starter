@@ -10,13 +10,12 @@ const env = load({
   path: resolve(__dirname, "./.env"),
 })
 
-const name = "MTA Bot"
-const ACE_ENDPOINT = "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-ace"
+const MTA_ACE_ENDPOINT = "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-ace"
 
 const getDepartureTime = (data: unknown[]) => (inputs: Record<string, string>) => {
   // TODO: write the algo to use the inputs to filter the data
   console.log("inputs...", JSON.stringify(inputs))
-  const answer = String((data as any)[0].stopTimeUpdate[0].departure.time)
+  const answer = (data as any)[0]
   return answer
 }
 
@@ -34,8 +33,9 @@ Error case
 }
 */
 const { start } = genBotzApp({
-  name,
-  apiEndpoint: ACE_ENDPOINT,
+  variant: "PUBLIC_API",
+  name: "MTA Bot",
+  apiEndpoint: MTA_ACE_ENDPOINT,
   apiKey: env.MTA_API_KEY,
   apiInputs: ["stopId", "routeId", "now"],
   genJsonResponseFromApiData: getDepartureTime

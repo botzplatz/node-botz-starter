@@ -1,4 +1,5 @@
 import { resolve } from "path"
+import path from "path"
 import { load } from "ts-dotenv"
 
 import { genBotzApp } from "./app"
@@ -19,10 +20,12 @@ const emailInputs = [
 ]
 
 const { start } = genBotzApp({
+  variant: "GOOGLE_OAUTH",
   name,
   apiInputs: emailInputs,
+  authFilepath: path.join(__dirname, "./oauth2.keys.json"),
 })
 
-const port = Number(env.PORT) || 3001
+const port = Number(env.PORT) || 3003
 
 start(port)

@@ -27,44 +27,42 @@ const fetchFeed = async ({ apiKey, apiEndpoint }: { apiKey: string, apiEndpoint:
   return null
 }
 
-export const genBotzApp = ({
-  name = "",
-  apiEndpoint,
-  apiKey,
-  apiInputs,
-  genJsonResponseFromApiData = (data) => () => data
-}: AppConfig) => {
+export const genBotzApp = (config: AppConfig) => {
+  const {
+    name,
+    variant,
+    apiInputs,
+    genJsonResponseFromApiData = (data) => () => data
+  } = config
+
   const app = express()
-  app.use(express.json())
-  app.use(express.urlencoded())
+  if (apiInputs) {
+    app.use(express.urlencoded())
+    app.use(express.json())
+  }
+
   app.post("/", (req, res) => {
-    if (!apiKey) {
-      return res.json({
-        error: "API_KEY_MISSING",
+    if (variant === "PUBLIC_API") {
+      const { apiEndpoint, apiKey, apiInputs } = config
+
+        const inputs = apiInputs?.reduce((acc, inputName) => ({
+          ...acc,
+          [inputName]: req.body[inputName]
+        }), {})
+
+      console.log("INPUTS", JSON.stringify(inputs, null, 2))
+      fetchFeed({ apiKey, apiEndpoint }).then((feed) => {
+        return res.json({
+          data: genJsonResponseFromApiData(feed)(inputs),
+          error: null
+        })
+      }).catch((e) => {
+        console.log("error....", e)
+        return res.json({
+          error: "ERROR",
+        })
       })
     }
-    if (!apiEndpoint) {
-      return res.json({
-        error: "API_ENDPOINT_MISSING",
-      })
-    }
-    const inputs = apiInputs?.reduce((acc, inputName) => ({
-      ...acc,
-      [inputName]: req.body[inputName]
-    }), {})
-
-    console.log("INPUTS", JSON.stringify(inputs, null, 2))
-
-    fetchFeed({ apiKey, apiEndpoint }).then((feed) => {
-      return res.json({
-        data: genJsonResponseFromApiData(feed)(inputs),
-        error: null
-      })
-    }).catch(() => {
-      return res.json({
-        error: "ERROR",
-      })
-    })
   })
 
   const start = (port: number) => {

@@ -1,7 +1,6 @@
 import { authenticate } from "@google-cloud/local-auth"
 import express from "express"
 import { google } from "googleapis"
-import path from "path"
 
 import { AppConfig } from "../shared/types"
 
@@ -48,9 +47,9 @@ const sendEmail = async (input: EmailInputs) => {
   return res
 }
 
-const authenticateGoogle = async () => {
+const authenticateGoogle = async (authFilepath: string) => {
   const auth = await authenticate({
-    keyfilePath: path.join(__dirname, "./oauth2.keys.json"),
+    keyfilePath: authFilepath,
     scopes: [
       "https://mail.google.com/",
       "https://www.googleapis.com/auth/gmail.modify",
@@ -60,10 +59,15 @@ const authenticateGoogle = async () => {
   })
   google.options({ auth })
 }
-export const genBotzApp = ({ name = "", apiInputs }: AppConfig) => {
+export const genBotzApp = (config: AppConfig) => {
+  const { apiInputs, name, variant } = config
+
   const app = express()
-  app.use(express.json())
-  app.use(express.urlencoded())
+  if (apiInputs) {
+    app.use(express.urlencoded())
+    app.use(express.json())
+  }
+
   app.post("/", (req, res) => {
     const inputs = !apiInputs ? null : apiInputs.reduce((acc, inputName) => ({
       ...acc,
@@ -87,11 +91,13 @@ export const genBotzApp = ({ name = "", apiInputs }: AppConfig) => {
   })
   const start = (port: number) => {
     // Obtain user credentials to use for the request
-    authenticateGoogle().then(() => {
-      app.listen(port, () => {
-        console.log(`[${name}]: Server is running at http://localhost:${port}`)
+    if (variant === "GOOGLE_OAUTH" && config.authFilepath) {
+      authenticateGoogle(config.authFilepath).then(() => {
+        app.listen(port, () => {
+          console.log(`[${name}]: Server is running at http://localhost:${port}`)
+        })
       })
-    })
+    }
   }
   return {
     start,
