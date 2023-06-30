@@ -14,3 +14,5 @@ yarn-debug.log*
 
 .DS_Store
 *.dump
+
+oauth2.keys.json

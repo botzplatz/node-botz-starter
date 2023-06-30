@@ -5,7 +5,6 @@ import fetch from "node-fetch"
 
 import { AppConfig } from "../shared/types"
 
-
 const fetchFeed = async ({ apiKey, apiEndpoint }: { apiKey: string, apiEndpoint: string }) => {
   const response = await fetch(apiEndpoint, {
     headers: {
@@ -27,8 +26,6 @@ const fetchFeed = async ({ apiKey, apiEndpoint }: { apiKey: string, apiEndpoint:
   }
   return null
 }
-
-
 
 export const genBotzApp = ({
   name = "",
