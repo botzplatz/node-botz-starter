@@ -2,7 +2,7 @@ import { genBotzApp } from "./app"
 
 const { start } = genBotzApp({
   variant: "OPEN_API",
-  name: "Simple Node App"
+  name: "Hello World"
 })
 
 const port = Number(process.env.PORT) || 3001

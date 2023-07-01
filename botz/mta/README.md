@@ -63,3 +63,7 @@ The MTA Realtime Data Feeds provided these endpoints
 The subway Realtime Feeds have 8 separate endpoints
 
 <img width="964" alt="Screenshot 2023-06-29 at 13 25 39" src="https://github.com/botzplatz/node-botz-starter/assets/5825343/ca7b4d7e-b7ad-42ad-a070-e94aa7ab418c">
+
+# Useful MTA Botz
+
+1. Given your geo-location, display the departure time of all the trains which are within 1 mile of you.

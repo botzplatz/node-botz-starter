@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node botz/example/index.ts",
     "dev": "ts-node-dev botz/gmail/index.ts",
-    "dev:simple": "ts-node-dev botz/example/index.ts",
+    "dev:hello": "ts-node-dev botz/hello/index.ts",
     "dev:mta": "ts-node-dev botz/mta/index.ts",
     "dev:gmail": "ts-node-dev botz/gmail/index.ts",
     "dev:all": "concurrently --kill-others-on-fail  \"yarn dev:simple\"  \"yarn dev:mta\" \"yarn dev:gmail\"",
