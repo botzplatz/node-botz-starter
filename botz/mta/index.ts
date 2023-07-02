@@ -45,7 +45,7 @@ const getDepartureTime = (data: unknown[]) => (inputs: Record<string, string>) =
 }
 
 
-const fetchDataFromPublicApi = fetchFeed({
+const interactWithThirdPartyApi = fetchFeed({
   apiKey: env.MTA_API_KEY,
   apiEndpoint: MTA_ACE_ENDPOINT
 })
@@ -67,7 +67,7 @@ const { start } = genBotzApp({
   variant: "PUBLIC_API",
   name: "MTA Bot",
   apiInputs: ["stopId", "routeId", "now"],
-  fetchDataFromPublicApi,
+  interactWithThirdPartyApi,
   genSuccessResponse: getDepartureTime
 })
 

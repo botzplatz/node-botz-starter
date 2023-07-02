@@ -2,7 +2,8 @@ import { resolve } from "path"
 import path from "path"
 import { load } from "ts-dotenv"
 
-import { genBotzApp } from "./app"
+import { genBotzApp } from "../../botzapp"
+import { genAuthenticate, sendEmail } from "./utils"
 
 const name = "Send Email"
 
@@ -19,11 +20,14 @@ const emailInputs = [
   "body",
 ]
 
+const authFilePath = path.join(__dirname, "./oauth2.keys.json")
+console.log(authFilePath)
 const { start } = genBotzApp({
-  variant: "GOOGLE_OAUTH",
+  variant: "OAUTH",
   name,
   apiInputs: emailInputs,
-  authFilepath: path.join(__dirname, "./oauth2.keys.json"),
+  authenticate: genAuthenticate(authFilePath),
+  interactWithThirdPartyApi: sendEmail
 })
 
 const port = Number(env.PORT) || 3003

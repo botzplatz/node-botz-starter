@@ -20,12 +20,13 @@ interface AppConfigOpenApi extends AppConfigBase {
 interface AppConfigPublicAPI extends AppConfigBase {
   variant: "PUBLIC_API"
   // TODO: we may want to pass type parameter for the promised data?
-  fetchDataFromPublicApi: (input?: any) => Promise<any>
+  interactWithThirdPartyApi: (input?: any) => Promise<any>
 }
 
 interface AppConfigGoogle extends AppConfigBase {
-  variant: "GOOGLE_OAUTH"
-  authFilepath: string
+  variant: "OAUTH"
+  authenticate: () => Promise<any>
+  interactWithThirdPartyApi: (input?: any) => Promise<any>
 }
 
 export type AppConfig = AppConfigOpenApi | AppConfigPublicAPI | AppConfigGoogle
