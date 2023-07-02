@@ -2,7 +2,7 @@ import { authenticate } from "@google-cloud/local-auth"
 import express from "express"
 import { google } from "googleapis"
 
-import { AppConfig } from "../shared/types"
+import { AppConfig } from "../../botzapp/types"
 
 
 // TODO: Can this be derived from emailInputs?

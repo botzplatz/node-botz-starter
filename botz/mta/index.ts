@@ -1,7 +1,9 @@
+import GtfsRealtimeBindings from "gtfs-realtime-bindings"
+import fetch from "node-fetch"
 import { resolve } from "path"
 import { load } from "ts-dotenv"
 
-import { genBotzApp } from "./app"
+import { genBotzApp } from "../../botzapp"
 
 const env = load({
   MTA_API_KEY: String,
@@ -12,12 +14,41 @@ const env = load({
 
 const MTA_ACE_ENDPOINT = "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-ace"
 
+
+const fetchFeed = ({ apiKey, apiEndpoint }: { apiKey: string, apiEndpoint: string }) => async () => {
+  const response = await fetch(apiEndpoint, {
+    headers: {
+      "x-api-key": apiKey,
+    },
+  })
+  if (response.ok) {
+    const buffer = await response.arrayBuffer()
+    const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
+      new Uint8Array(buffer)
+    )
+    const tripUpdate: any = []
+    feed.entity.forEach((entity) => {
+      if (entity.tripUpdate) {
+        tripUpdate.push(entity.tripUpdate)
+      }
+    })
+    return tripUpdate
+  }
+  return null
+}
+
 const getDepartureTime = (data: unknown[]) => (inputs: Record<string, string>) => {
   // TODO: write the algo to use the inputs to filter the data
   console.log("inputs...", JSON.stringify(inputs))
   const answer = (data as any)[0]
   return answer
 }
+
+
+const fetchDataFromPublicApi = fetchFeed({
+  apiKey: env.MTA_API_KEY,
+  apiEndpoint: MTA_ACE_ENDPOINT
+})
 
 // The response of this API call is
 /*
@@ -35,10 +66,9 @@ Error case
 const { start } = genBotzApp({
   variant: "PUBLIC_API",
   name: "MTA Bot",
-  apiEndpoint: MTA_ACE_ENDPOINT,
-  apiKey: env.MTA_API_KEY,
   apiInputs: ["stopId", "routeId", "now"],
-  genJsonResponseFromApiData: getDepartureTime
+  fetchDataFromPublicApi,
+  genSuccessResponse: getDepartureTime
 })
 
 const port = Number(env.PORT) || 3002

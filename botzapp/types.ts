@@ -9,7 +9,8 @@ export type BotzAppVariant = "GOOGLE_OAUTH" | "PUBLIC_API" | "OPEN_API"
 
 interface AppConfigBase {
   name: string
-  genJsonResponseFromApiData?: (data: any) => any
+  // TODO: the response return type must be more strictly defined
+  genSuccessResponse?: (data?: any) => any
   apiInputs?: string[]
 }
 
@@ -18,8 +19,8 @@ interface AppConfigOpenApi extends AppConfigBase {
 }
 interface AppConfigPublicAPI extends AppConfigBase {
   variant: "PUBLIC_API"
-  apiKey: string
-  apiEndpoint: string
+  // TODO: we may want to pass type parameter for the promised data?
+  fetchDataFromPublicApi: (input?: any) => Promise<any>
 }
 
 interface AppConfigGoogle extends AppConfigBase {
@@ -34,8 +35,8 @@ interface ApiRespSuccess<D> {
   errorCode?: never;
 }
 interface ApiRespError {
-    data?: never;
-    errorCode: ERROR_CODE;
+  data?: never;
+  errorCode: ERROR_CODE;
 }
 
 export type ApiResp<D> = ApiRespSuccess<D> | ApiRespError;

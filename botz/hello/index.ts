@@ -1,4 +1,4 @@
-import { genBotzApp } from "./app"
+import { genBotzApp } from "../../botzapp"
 
 const { start } = genBotzApp({
   variant: "OPEN_API",
